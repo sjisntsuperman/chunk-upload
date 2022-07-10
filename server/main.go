@@ -56,7 +56,7 @@ func mergeChunk(r *http.Request) (int, error) {
 			return 0, err
 		}
 		for i := 0; i < total; i++ {
-			lock.Add(i)
+			lock.Add(1)
 			go mergeFile(i, fileHeader.Filename, filePath)
 		}
 		lock.Wait()
@@ -110,7 +110,7 @@ func mergeFile(idx int, fileName, filePath string) {
 		}
 		totalLen += len
 	}
-	// lock.Done()
+	lock.Done()
 	// return totalLen, nil
 }
 func uploadFile(upfile multipart.File, upSeek int64, file *os.File, fSeek int64) (int, error) {
